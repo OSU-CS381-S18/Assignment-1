@@ -80,6 +80,6 @@ could be an issue. On the other hand, however, this could be benefitable, we cou
 
 translate :: Expr -> Exp
 translate (N x) = (Num x)
-translate (Pluse x y) = Apply Add [translate x, translate y]
+translate (Plus x y) = Apply Add [translate x, translate y]
 translate (Times x y) = Apply Multiply [translate x, translate y]
 translate (Neg x) = Apply Negate [translate x]
