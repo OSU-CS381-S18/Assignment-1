@@ -65,3 +65,21 @@ data Exp = Num Int
 a = Apply Negate [Apply Multiply [Apply Add [Num 3, Num 4],Num 7]]
 
 -------------------Exercise 3 part b---------------------------------------------------------
+	
+{-The benefit of using the Expr representation is that it is clear what the constructors expect for 
+example Neg can only take one argument, this is not so in the Exp representation, the arithmetic operations can receive multiple
+arguments. Its disadvantage may also be due to taking a predefined number of arguments such as the case of multiplying three numbers requires 
+two multiplication operations.
+ 
+The Exp representation does a better job of encapsulation, using different types to reduce the overhead of a single representation. Its 
+disadvantage is that OP does not know how many arguments to expect such as the case for Neg receiving multiple arguments, this 
+could be an issue. On the other hand, however, this could be benefitable, we could now multiply three numbers with one operation.
+-}
+	
+-------------------Exercise 3 part c---------------------------------------------------------
+
+translate :: Expr -> Exp
+translate (N x) = (Num x)
+translate (Pluse x y) = Apply Add [translate x, translate y]
+translate (Times x y) = Apply Multiply [translate x, translate y]
+translate (Neg x) = Apply Negate [translate x]
