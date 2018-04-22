@@ -42,4 +42,4 @@ steps :: Int -> Cmd
 steps n
       | n <= 0 = Exp (Pen Up) (Exp (MoveTo (NumPos n) (NumPos n)) (Pen Down))
       | n == 1 = Exp (Pen Up) (Exp (MoveTo (NumPos n) (NumPos n)) (Exp (Pen Down) (Exp (MoveTo (NumPos (pred n)) (NumPos n)) (MoveTo (NumPos (pred n)) (NumPos (pred n))))))
-      | otherwise = Exp (Exp (Pen Up) (Exp (MoveTo (NumPos n) (NumPos n)) (Exp (Pen Down) (Exp (MoveTo (NumPos (pred n)) (NumPos n)) (MoveTo (NumPos (pred n)) (NumPos (pred n))))))) (steps (pred n))
+      | otherwise = Exp (Exp (Pen Up) (Exp (MoveTo (NumPos n) (NumPos n)) (Exp (Pen Down) (Exp (MoveTo (NumPos (pred n)) (NumPos n)) NumPos (pred n)(MoveTo (NumPos (pred n)) (NumPos (pred n))))))) (steps (pred n))
