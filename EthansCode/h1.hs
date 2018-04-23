@@ -50,6 +50,23 @@ halfAdder = MakeCircuit (GateVal (1) (Xor) (GateVal (2) (And) (EmptyGate))) (Con
 
 -------------------Exercise 2 part c---------------------------------------------------------
 
+prettyCircuit :: Circuit -> String
+prettyCircuit (MakeCircuit x y) = prettyGates x++" "++prettyLinks y
+
+prettyGates :: Gates -> String
+prettyGates (EmptyGate) = ""
+prettyGates (GateVal x y z) = show x++"("++prettyFn y++")" ++ prettyGates z
+
+prettyLinks :: Links -> String
+prettyLinks (EmptyLink) = ""
+prettyLinks (Connect (x1, y1) (x2,y2) z) = "Gate connects from "++"("++show x1++"."++show y1++ ") to ("++show x2++"."++show y2++")"
+
+prettyFn :: GateFn -> String
+prettyFn And = "And"
+prettyFn Or = "Or"
+prettyFn Not = "Not"
+prettyFn Xor = "Xor"
+
 -------------------Exercise 3 part a---------------------------------------------------------
 -- (-(3+4)*7)
 data Expr = N Int
