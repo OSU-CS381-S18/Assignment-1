@@ -9,7 +9,7 @@ data Cmd = Pen Mode
 		 | MoveTo Pos Pos
 		 | Def String Pars Cmd
 		 | Call String Vals
-		 | Next Cmd Cmd
+		 | Exp Cmd Cmd
 		 deriving Show
 
 data Mode = Up | Down
@@ -38,24 +38,24 @@ vector = Def "vector" (-- specify parameters
 					   NamePars      "y2" )))
 					  )
 					  (-- specify functionality
-					   Next (Pen Up)                               (
-					   Next (MoveTo (NamePos "x1") (NamePos "y1")) (
-					   Next (Pen Down)                             (
+					   Exp (Pen Up)                               (
+					   Exp (MoveTo (NamePos "x1") (NamePos "y1")) (
+					   Exp (Pen Down)                             (
 					   MoveTo (NamePos "x2") (NamePos "y2")       )))
 					  )
 
 -- c)
 steps :: Int -> Cmd
 steps n 
-		| n <= 0 = (Next (Pen Up) 
-				   (Next (MoveTo (NumPos n) (NumPos n)) 
+		| n <= 0 = (Exp (Pen Up) 
+				   (Exp (MoveTo (NumPos n) (NumPos n)) 
 				   	(Pen Down)))
 -- here is the patch from the initial file we don't need this step and correct the (otherwise) case
-	  	| otherwise = (Next  (Pen Up) 
-	  				  (Next (MoveTo (NumPos n) (NumPos n)) 
-	  				  (Next (Pen Down) 
-	  				  (Next (MoveTo (NumPos(pred n)) (NumPos n)) 
-	  				  (Next (MoveTo (NumPos(pred n))(NumPos(pred n))) 
+	  	| otherwise = (Exp  (Pen Up) 
+	  				  (Exp (MoveTo (NumPos n) (NumPos n)) 
+	  				  (Exp (Pen Down) 
+	  				  (Exp (MoveTo (NumPos(pred n)) (NumPos n)) 
+	  				  (Exp (MoveTo (NumPos(pred n))(NumPos(pred n))) 
 	  				  (steps (pred n)) )))))
 
 
@@ -68,6 +68,7 @@ data Gates = NumG Int GateFn Gates
 
 data GateFn = And | Or | Xor | Not
 
-data Links = NumL Int Int Links
+data Links = NumL Link Link Links
 			| EmptyL
 
+type Link = (Int,Int)
