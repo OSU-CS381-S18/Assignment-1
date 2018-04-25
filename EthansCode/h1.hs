@@ -1,4 +1,10 @@
-
+{-
+- Names:
+-  Daniel Domme
+-  Blake Hudson
+-  Nickoli Londura
+-  Ethan Patterson
+-}
 -------------------Exercise 1 part a---------------------------------------------------------
 
 data Cmd = Pen Mode 
@@ -7,11 +13,16 @@ data Cmd = Pen Mode
  | Call String Vals 
  | Exc Cmd Cmd
  | Empty
+ deriving Show
 
 data Mode = Up | Down
+ deriving Show
 data Pos = NumPos Int | NamePos String
+ deriving Show
 data Pars = NamePars String | NameParsList String Pars
+ deriving Show
 data Vals = NumValsList Int Vals | NumVals Int
+ deriving Show
 
 -------------------Exercise 1 part b---------------------------------------------------------
  
@@ -23,9 +34,6 @@ vector = Def "vector" (NameParsList "x1" (NameParsList "y1"(NameParsList "x2" (N
 steps :: Int -> Cmd 
 steps n
  | n <= 0 = Empty
- | n == 1 = Exc (Pen Up) 
-           (Exc (MoveTo (NumPos n) (NumPos n)) 
-		   (Exc (Pen Down) (Exc (MoveTo (NumPos (pred n)) (NumPos n)) (MoveTo (NumPos (pred n)) (NumPos (pred n))))))
  | otherwise = Exc 
               (Exc (Pen Up) 
 			  (Exc (MoveTo (NumPos n) (NumPos n)) 
@@ -73,11 +81,14 @@ data Expr = N Int
           | Plus Expr Expr
 		  | Times Expr Expr
 		  | Neg Expr
+		  deriving Show
 
 data Op = Add | Multiply | Negate
+	deriving Show
 
 data Exp = Num Int
          | Apply Op [Exp]
+		 deriving Show
 
 a = Apply Negate [Apply Multiply [Apply Add [Num 3, Num 4],Num 7]]
 
