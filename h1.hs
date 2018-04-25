@@ -59,16 +59,60 @@ steps n
 	  				  (steps (pred n)) )))))
 
 
--- Exercise 2 Digital Circuit Design Language
--- 
+-- Exercise 2 Digital Circuit Design Language-----------
+
+-- ex2.a)-------------------------------------
+
 data Circuit = Cr Gates Links
 
-data Gates = NumG Int GateFn Gates
+data Gates = MyGate Int GateFn Gates
 			| EmptyG
 
 data GateFn = And | Or | Xor | Not
 
-data Links = NumL Link Link Links
+data Links = MyLink Link Link Links
 			| EmptyL
 
 type Link = (Int,Int)
+
+-- ex2 b)------------------------
+halfadder:: Circuit 
+
+halfadder = Cr (MyGate 1 Xor (MyGate 2 And EmptyG))
+			   (MyLink (1,1)(2,1) (MyLink(1,2)(2,2) EmptyL))
+
+-- ex2 c)------------------------
+
+print_circuit:: Circuit -> String
+
+print_circuit (Cr thisgate thislink) = "printing" ++ print_gates thisgate ++ print_links thislink
+
+print_gates:: Gates -> String
+
+print_gates EmptyG = ""
+
+print_gates (MyGate number gateOp nextgate) = " circuit-" ++show number ++":" ++ print_Gatefn gateOp ++ ";" ++ print_gates nextgate 
+
+print_links:: Links -> String
+
+print_links EmptyL = ""
+
+print_links (MyLink (a,b)(c,d) nextlink) = " "++"from"++" "++ show a ++"."++ show b ++" "++"to" 
+                                           ++" "++ show c++"." ++ show d ++ " " ++ "...."++ print_links nextlink   
+
+print_Gatefn:: GateFn -> String
+
+print_Gatefn Xor = "xor"
+print_Gatefn And = "and"
+print_Gatefn Not = "not"
+print_Gatefn Or = "or"
+
+
+
+
+
+
+
+
+
+
