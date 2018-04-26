@@ -107,12 +107,15 @@ data Expr = N Int
   | Plus Expr Expr
   | Times Expr Expr
   | Neg Expr
+  deriving Show
 
 -- Exp Abstract Syntax
 data Op = Add | Multiply | Negate
+  deriving Show
 
 data Exp = Num Int
   | Apply Op [Exp]
+  deriving Show
 
 --  a)
 
