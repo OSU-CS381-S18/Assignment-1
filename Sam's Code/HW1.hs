@@ -16,22 +16,25 @@ vals ::= num, vals | num
 
 -- Exercise 1. Mini Logo 
 -- a) 
-
 data Cmd = Pen Mode
          | MoveTo Pos Pos
          | Def String Pars Cmd
          | Call String Vals
          | Exp Cmd Cmd
          | NoAction
+         deriving (Show)
 data Mode = Up 
     | Down
+    deriving (Show)
 data Pos = NumPos Int 
     | NamePos String
+    deriving (Show)
 data Pars = NamePars String
     | NameParsRecur String Pars
+    deriving (Show)
 data Vals = NumVals Int
     | NumValsRecur Int Vals
-
+    deriving (Show)
 
 -- Exercise 1. Mini Logo 
 -- b) 
@@ -79,18 +82,10 @@ link ::= from num.num to num.num; links |
 
 -- Exercise 2. DiCiDL program 
 -- a)
---type Circuit = Circ (Gates, Links) -- paths will lead to a gate or a link
---type Gates = GT [(Int,Gate)] -- creates a list of the actions of hi or low to gate
---data Gate = And | Or | Xor | Not -- gate types
---type Links = [Link] -- list of links
---data Link  = FromTo (Int, Int) (Int, Int) -- input , output
-
-
-
 data Circuit = Circuits Gates LinkLinks
-data Gates = HiLow Int Gate Gates | None
+data Gates = HiLow Int Gate Gates | EmptyGate
 data Gate = And | Or | Xor | Not
-data LinkLinks = L Link Link LinkLinks | MT
+data LinkLinks = L Link Link LinkLinks | EmptyLink
 type Link = (Int, Int)
 
 -- Exercise 2. DiCiDL program 
@@ -105,67 +100,90 @@ from 1.2 to 2.2;
 halfadder = Circuits 
     (HiLow 1 Xor 
     (HiLow 2 And 
-        None))
+        EmptyGate))
     (L (1, 1) (2, 1) 
     (L (1, 2) (2, 2) 
-        MT))
+        EmptyLink))
 
 -- Exercise 2. DiCiDL program 
 -- c)
+-- input to print: printCircuit halfadder
 printGate :: Gate -> String
 printGate And = "and"
 printGate Or  = "or"
 printGate Xor = "xor"
 printGate Not = "not"
 printLinkLinks :: LinkLinks -> String
-printLinkLinks MT = ""
+printLinkLinks EmptyLink = ""
 printLinkLinks (L (g1, w1) (g2, w2) rest)
             = "from " ++ show g1 ++ "." ++ show w1 ++ " to " 
             ++ show g2 ++ "." ++ show w2 ++ "; " ++ printLinkLinks rest
 printGates :: Gates -> String
-printGates None = ""
+printGates EmptyGate = ""
 printGates (HiLow g gf rest) 
             = show g ++ ":" ++ printGate gf ++ "; " ++ printGates rest
 printCircuit :: Circuit -> String
 printCircuit (Circuits gates links) = printGates gates ++ printLinkLinks links
 
+-- Exercise 3. Designing Abstract Syntax
+{-
+Abstract syntax 1
+
+data Expr = N Int
+    | Plus Expr Expr
+    | Times Expr Expr
+    | Neg Expr
 
 
+Abstract syntax 2
+
+data Op = Add | Multiply | Negate
+    data Exp = Num Int
+        | Apply Op [Exp]
+-}
+
+-- Exercise 3. Designing Abstract Syntax
+-- a)
+
+data Expr = N Int
+          | Plus Expr Expr
+          | Times Expr Expr
+          | Neg Expr
+          deriving Show
+
+data Op = Add
+        | Multiply
+        | Negate
+        deriving Show
+
+data Exp = Num Int
+         | Apply Op [Exp]
+         deriving Show
+
+exp = Apply Multiply [ Apply Negate [ Apply Add [ Num 3, Num 4 ] ], Num 7]
+
+-- Exercise 3. Designing Abstract Syntax
+-- b)
 
 {-
-data Circuit = MakeCircuit Gates Links
+It apears that 'Abstract syntax 2' can take a list of expressions.
+Abstract syntax 1 can only take two exressions as input.
+-}
 
-data Gates = GateVal Int GateFn Gates | EmptyGate
-data GateFn = And
-            | Or
-			| Xor
-			| Not
 
-data Links = Connect (Int,Int) (Int,Int) Links | EmptyLink
+-- Exercise 3. Designing Abstract Syntax
+-- c)
+translate :: Expr -> Exp
+translate (N x) = (Num x)
+translate (Plus x y) = Apply Add [translate x, translate y]
+translate (Times x y) = Apply Multiply [translate x, translate y]
+translate (Neg x) = Apply Negate [translate x]
 
--------------------Exercise 2 part b---------------------------------------------------------
 
-halfAdder = MakeCircuit (GateVal (1) (Xor) (GateVal (2) (And) (EmptyGate))) (Connect (1,1)(2,1) (Connect(1,2) (2,2) (EmptyLink)))
 
--------------------Exercise 2 part c---------------------------------------------------------
 
-prettyCircuit :: Circuit -> String
-prettyCircuit (MakeCircuit x y) = prettyGates x++" "++prettyLinks y
 
-prettyGates :: Gates -> String
-prettyGates (EmptyGate) = ""
-prettyGates (GateVal x y z) = show x++"("++prettyFn y++")" ++ prettyGates z
 
-prettyLinks :: Links -> String
-prettyLinks (EmptyLink) = ""
-prettyLinks (Connect (x1, y1) (x2,y2) z) = "Gate connects from "++"("++show x1++"."++show y1++ ") to ("++show x2++"."++show y2++")"
-
-prettyFn :: GateFn -> String
-prettyFn And = "And"
-prettyFn Or = "Or"
-prettyFn Not = "Not"
-prettyFn Xor = "Xor"
-  -}  
 
 
 
