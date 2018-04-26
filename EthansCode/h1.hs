@@ -43,15 +43,16 @@ steps n
 -------------------Exercise 2 part a---------------------------------------------------------
 
 data Circuit = MakeCircuit Gates Links
-
+ deriving Show
 data Gates = GateVal Int GateFn Gates | EmptyGate
+ deriving Show
 data GateFn = And
             | Or
 			| Xor
 			| Not
-
+ deriving Show
 data Links = Connect (Int,Int) (Int,Int) Links | EmptyLink
-
+ deriving Show
 -------------------Exercise 2 part b---------------------------------------------------------
 
 halfAdder = MakeCircuit (GateVal (1) (Xor) (GateVal (2) (And) (EmptyGate))) (Connect (1,1)(2,1) (Connect(1,2) (2,2) (EmptyLink)))
@@ -63,11 +64,11 @@ prettyCircuit (MakeCircuit x y) = prettyGates x++" "++prettyLinks y
 
 prettyGates :: Gates -> String
 prettyGates (EmptyGate) = ""
-prettyGates (GateVal x y z) = show x++"("++prettyFn y++")" ++ prettyGates z
+prettyGates (GateVal x y z) = show x++":("++prettyFn y++");"++ "\n" ++ prettyGates z
 
 prettyLinks :: Links -> String
 prettyLinks (EmptyLink) = ""
-prettyLinks (Connect (x1, y1) (x2,y2) z) = "Gate connects from "++"("++show x1++"."++show y1++ ") to ("++show x2++"."++show y2++")"
+prettyLinks (Connect (x1, y1) (x2,y2) z) = "from "++"("++show x1++"."++show y1++ ") to ("++show x2++"."++show y2++");" ++ "\n" ++ prettyLinks z
 
 prettyFn :: GateFn -> String
 prettyFn And = "And"
@@ -106,8 +107,8 @@ could be an issue. On the other hand, however, this could be benefitable, we cou
 	
 -------------------Exercise 3 part c---------------------------------------------------------
 
-translate :: Expr -> Exp
-translate (N x) = (Num x)
-translate (Plus x y) = Apply Add [translate x, translate y]
-translate (Times x y) = Apply Multiply [translate x, translate y]
-translate (Neg x) = Apply Negate [translate x]
+convert :: Expr -> Exp
+convert (N x) = (Num x)
+convert (Plus x y) = Apply Add [convert x, convert y]
+convert (Times x y) = Apply Multiply [convert x, convert y]
+convert (Neg x) = Apply Negate [convert x]
