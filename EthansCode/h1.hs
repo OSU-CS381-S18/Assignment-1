@@ -107,8 +107,8 @@ could be an issue. On the other hand, however, this could be benefitable, we cou
 	
 -------------------Exercise 3 part c---------------------------------------------------------
 
-convert :: Expr -> Exp
-convert (N x) = (Num x)
-convert (Plus x y) = Apply Add [convert x, convert y]
-convert (Times x y) = Apply Multiply [convert x, convert y]
-convert (Neg x) = Apply Negate [convert x]
+translate :: Expr -> Exp
+translate (N x) = (Num x)
+translate (Plus x y) = Apply Add [translate x, translate y]
+translate (Times x y) = Apply Multiply [translate x, translate y]
+translate (Neg x) = Apply Negate [translate x]
